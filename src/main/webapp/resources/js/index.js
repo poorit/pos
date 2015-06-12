@@ -25,7 +25,7 @@
 			}
 			
 		});
-		$(".modal-dialog").css('top',contents_top_height-200);
+		$(".modal-dialog").css('top',200+"px");
 		$("#join_btn").click(function(){
 			$('body').css('padding',0);
 		});
