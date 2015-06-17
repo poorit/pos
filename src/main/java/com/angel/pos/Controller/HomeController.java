@@ -1,4 +1,4 @@
-package com.angel.pos;
+package com.angel.pos.Controller;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -26,6 +26,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
+		System.out.println("ぞしぞし");
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
