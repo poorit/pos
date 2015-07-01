@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.angel.pos.Mapper.MemberMapper">
+  <!-- <cache-ref namespace=""/> -->
+  	<resultMap type="Members" id="MembersResultMap">
+  		<result property="no" column="no"/>
+  		<result property="id" column="id"/>
+  		<result property="pass" column="pass"/>
+  		<result property="name" column="name"/>
+  		<result property="city" column="city"/>
+  	</resultMap>
+  	
+  	<!-- select -->
+  	<select id="getMembers" resultMap="MembersResultMap">
+  		select * from member
+  	</select>
+  	
+  	<!--  insert -->
+  	<insert id="insertMember" parameterType="com.angel.pos.Vo.Members">
+  		insert into members values ( #{no},#{id},#{pass},#{name},#{city})
+  	</insert>
+  	
+  	<update id="updateMember"></update>
+  	
+  	<delete id="deleteMember" parameterType="com.angel.pos.Vo.Members">
+  	</delete>
+</mapper>
