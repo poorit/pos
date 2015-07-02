@@ -1,6 +1,12 @@
 @CHARSET "UTF-8";
-	body{
-		background-color:#5abeff;
+	
+	html , body{
+		overflow:none;
+		margin:0 auto;
+		width:100%;
+		height:100%;
+		padding:0;
+		background-color:tomato;
 	}
 	.col-md-2{
 		display:inline-block;
@@ -9,26 +15,26 @@
 		text-align:center;
 	}
 	/* navbar css */
+
 	.navbar-custom{
-		background-image: linear-gradient(to bottom, #3498db 0,#3498db 100%);
-		border-color:#28aeff;
+		background-image: linear-gradient(to bottom, #fff 0,#fff 100%);
+		border:solid 2px tomato ;
 		margin-bottom:0;
 	}
 	.navbar-default .navbar-brand{
-		color:white;
+		color:#444;
 	}
 	/* navbar css end */
 	
 	/* main contents css */
 	#main_contents{
-		background-color:#5abeff;
+		background-color:tomato;
 		width:100%;
 		margin:0 auto;
 	}
 	.contents_top{
 		background-color:#fff;
 		width:100%;
-		height:800px;
 		margin:0 auto;
 		text-align:center;
 		
@@ -37,21 +43,42 @@
 		position:relative;
 		height:100%;
 		margin:0 auto;
-		color:#5abeff;
-		top:300px;
+		color:tomato;
 		font-size:3em;
+		line-height:432px;
 	}
 	.contents_bottom{
-		background-color:#5abeff;
+		background-color:tomato;
 		width:100%;
+		height:100%;
 		text-align:center;
+		margin:0 auto;
+	}
+	.contents_bottom .text_area{
+		margin:0 auto;
+		height:100%;
+		width:900px;
+	}
+	.contents_bottom .text_area #notice{
+		float:left;
+		padding:10px;
+		padding-right:20px;
+		text-align:left;
+		
+	}
+	.contents_bottom .text_area #rank{
+		float:right;
+		padding:10px;
+		padding-left:20px;
+		text-align:right;
+		
+	}
+	.contents_bottom .text_area #notice , #rank hr{
+		width:400px;
 	}
 	
 	.main_btn{
 		height:300px;
-	}
-	.menu_btn{
-		
 	}
 	/* main contents css */
 	/* side menu css */

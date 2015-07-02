@@ -11,7 +11,6 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- MyBatis -->
-	<!-- mybatis -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 			<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
@@ -27,7 +26,8 @@
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="mapperLocations" value="classpath*:com/angel/pos/xml/*.xml"/> 
+		<property name="mapperLocations" value="classpath*:com/angel/pos/sql/*Dao.xml" />
+		<property name="typeAliasesPackage" value="com.angel.pos.Domain" />
 	</bean>
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSessionFactory"/>
