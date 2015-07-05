@@ -6,7 +6,7 @@ public class Members {
 	private String m_pass;
 	private String m_name;
 	private String m_city;
-	
+
 	public int getM_no() {
 		return m_no;
 	}

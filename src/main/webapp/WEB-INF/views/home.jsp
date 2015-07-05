@@ -11,33 +11,6 @@
 <script src="<%=request.getContextPath() %>/resources/lib/jquery-2.1.3/jquery-ui.js"></script>
 <script src="<%=request.getContextPath() %>/resources/lib/bootstrap-3.3.2/js/bootstrap.js"></script>
 <script src="<%=request.getContextPath() %>/resources/js/index.js"></script>
-<style>
-	#home_search{
-		display:inline-block;
-		margin:0 auto;
-		width:30%;
-		align:center;
-		text-align:center;
-		margin-bottom:20px;
-		border-radious:0px;
-		border:solid 3px #6ed746;
-	}
-	#home_search_input{
-		height:100%;
-		font-size:24px;
-		border-radius:0px;
-	}
-	#home_search_btn{
-		width:100px;
-		height:54px;
-		margin-bottom:10px;
-		border-radius:0px;
-		background:#6ed746;
-		color:#fff;
-		font-size:16px;
-	}
-	
-</style>
 </head>
 <body class="index">
 <%@ include file="navbar.jsp"%>

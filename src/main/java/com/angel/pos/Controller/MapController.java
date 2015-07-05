@@ -18,22 +18,20 @@ import com.angel.pos.Dao.MembersDao;
 /**
  * Handles requests for the application home page.
  */
-@Controller("HomeController")
-public class HomeController {
+@Controller("MapController")
+public class MapController {
 	@Autowired
 	@Qualifier("membersDao")
 	private MembersDao membersDao;
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MapController.class);
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	@RequestMapping(value = "/map", method = RequestMethod.GET)
+	public String map(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		
 		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
@@ -41,8 +39,6 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );
-		
-		//System.out.println("getM_id() :" + membersDao.select(1).getM_id());
-		return "home";
+		return "map";
 	}
 }
