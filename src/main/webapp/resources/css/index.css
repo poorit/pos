@@ -147,7 +147,7 @@
 	}
 	/* modal css end */
 	
-	#home_search , #map_search{
+	#home_search , #map_search, #station_search{
 		display:inline-block;
 		margin:0 auto;
 		width:30%;
@@ -157,14 +157,14 @@
 		border-radious:0px;
 		border:solid 3px #6ed746;
 	}
-	#home_search_input , #map_search_input{
+	#home_search_input , #map_search_input, #station_search_input{
 		height:100%;
 		font-size:24px;
 		border-radius:0px;
 	}
-	#home_search_btn , #map_search_btn{
+	#home_search_btn , #map_search_btn, #station_search_btn{
 		width:100px;
-		height:54px;
+		height:52px;
 		margin-bottom:10px;
 		border-radius:0px;
 		background:#6ed746;

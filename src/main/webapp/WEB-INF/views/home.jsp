@@ -19,10 +19,12 @@
 <div class="container-fluid" id="main_contents">
 	<div class="contents_top">
 		<h1>LOGO</h1>
-			<div class="form-group" id="home_search">
-					<input type="text" class="form-control" id="home_search_input" placeholder="SEARCH"/>
-			</div>
-			<button type="button" class="btn btn-default" id="home_search_btn">검색</button>
+			<form action="search" method="get">
+				<div class="form-group" id="home_search">
+						<input type="text" class="form-control" id="home_search_input" name="stationName" placeholder="SEARCH"/>
+				</div>
+				<button type="submit" class="btn btn-default" id="home_search_btn">찾기</button>
+			</form>
 	</div>
 	<div class="contents_bottom">
 		<div class="text_area">

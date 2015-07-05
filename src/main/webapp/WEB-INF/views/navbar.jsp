@@ -28,7 +28,7 @@
 				<a href="map">MAP</a>
 			</li>
 			<li class="">
-				<a href="#">SEARCH</a>
+				<a href="search">SEARCH</a>
 			</li>
 			<li class="">
 				<a href="#">RANK</a>
