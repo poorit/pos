@@ -28,7 +28,8 @@
 			
 			<!-- 역정보 -->
 			<div id="station_info">
-				찾는 역 이름 : ${stationName}
+				찾는 역 이름 : ${stationName} <br>
+				찾는 역 정보 : ${stationInfo}
 			</div>
 		</div>
 		
