@@ -42,93 +42,60 @@ public class SearchController {
 		logger.info("The client has requested that we find the station : "+stationName);
 		
 		// http://openAPI.seoul.go.kr:8088/62656869393632313630/json/SearchInfoBySubwayNameService/1/5/목동/
-		String originalURL = "http://openAPI.seoul.go.kr:8088";
-		String key = "62656869393632313630";
-		String type ="json";
-		String service = "SearchInfoBySubwayNameService";
-		String requestStart = "1";
-		String requestEnd = "5";
+		String originalURL = "http://openAPI.seoul.go.kr:8088", key = "62656869393632313630";
+		String type ="json", service = "SearchInfoBySubwayNameService";
+		String requestStart = "1", requestEnd = "5";
 		
 		String apiUrl = originalURL+"/"+key+"/"+type+"/"+service+"/"+requestStart+"/"+requestEnd+"/"+stationName;
 		
-		String stationInfo = getStationInfo(apiUrl);
+		String stationInfo = parsingJsonDatas(apiUrl);
 		
 		System.out.println("result :::::::: "+stationInfo);
+		
+		parsingJsonDatas(apiUrl);
 		
 		model.addAttribute("stationName", stationName);
 		model.addAttribute("stationInfo", stationInfo);
 		
-		URL url;
+		return "searchStation";
+	}
+	
+	// TODO : for work
+	public String parsingJsonDatas(String requestURL){
+		String result = "";
 		try {
-			url = new URL(apiUrl);
+			URL url = new URL(requestURL);
+			
 			// 한글 처리를 위해 InputStreamReader를 UTF-8 인코딩으로 감싼다.
-
 			InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
 			
 			// JSON을 Parsing 한다. 문법오류가 날 경우 Exception 발생, without Exception -> parse 메소드
-			System.out.println("isr = " + isr);
 			JSONObject object = (JSONObject)JSONValue.parseWithException(isr);
-			System.out.println("object = " + object);
-			// 객체
+			System.out.println("object ::::::::::::: " + object);
 			
 			//전체를 감싸고 있는 SearchInfoBySubwayNameService 안에 있는 정보 가져옴
 			JSONObject wrap = (JSONObject)(object.get("SearchInfoBySubwayNameService")); 
+			System.out.println("warp ::::::::::::: "+wrap);
 			
 			// wrap 안에 있는 key 값중 row키의 값을 배열화 시킴.
 			JSONArray items = (JSONArray)wrap.get("row");
 			
 			//items 안에 있는 row키값들을 출력
 			for(int i = 0 ; i < items.size(); i++) {
-			JSONObject obj1 = (JSONObject)items.get(i);
-			System.out.println("obj1 = " + obj1);
+				JSONObject obj = (JSONObject)items.get(i);
+				result += "obj"+i+" = " + obj +" / ";
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		
-		return "searchStation";
-	}
-	
-	// TODO : for work
-	public String getStationInfo(String requestURL){
-		try {
-			//REST API URL을 읽어들여 결과 출력한다
-			URL url = new URL(requestURL);
-			
-			InputStream is = url.openStream();
-			InputStreamReader isr = new InputStreamReader(is,"utf-8");	//인코딩
-			BufferedReader reader = new BufferedReader(isr);
-			StringBuffer buffer = new StringBuffer();
-			String line = null;
-			String tmpStr = null;
-			while((line = reader.readLine()) != null){
-				tmpStr = line.toString();
-				tmpStr = tmpStr.replaceAll(" ", "");
-				
-				if(!tmpStr.equals("")) buffer.append(line).append("\r\n");
-			}
-			reader.close();
-			
-			//REST API 결과값
-			String result = buffer.toString();
-			
-			return result;
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			return "fail";
-		}
+		return result;
 	}
 	
 }
