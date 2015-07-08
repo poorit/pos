@@ -70,21 +70,19 @@ public class SearchController {
 			InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
 			
 			// JSON을 Parsing 한다. 문법오류가 날 경우 Exception 발생, without Exception -> parse 메소드
-			JSONObject object = (JSONObject)JSONValue.parseWithException(isr);
-			System.out.println("object ::::::::::::: " + object);
+			JSONObject fullData = (JSONObject)JSONValue.parseWithException(isr);
 			
 			//전체를 감싸고 있는 SearchInfoBySubwayNameService 안에 있는 정보 가져옴
-			JSONObject wrap = (JSONObject)(object.get("SearchInfoBySubwayNameService")); 
-			System.out.println("warp ::::::::::::: "+wrap);
+			JSONObject wrapData = (JSONObject)(fullData.get("SearchInfoBySubwayNameService")); 
 			
 			// wrap 안에 있는 key 값중 row키의 값을 배열화 시킴.
-			JSONArray items = (JSONArray)wrap.get("row");
+			JSONArray rows = (JSONArray)wrapData.get("row");
 			
 			//items 안에 있는 row키값들을 출력
-			for(int i = 0 ; i < items.size(); i++) {
-				JSONObject obj = (JSONObject)items.get(i);
-				result += "obj"+i+" = " + obj +" / ";
+			for(int i = 0 ; i < rows.size(); i++) {
+				result += "FR_CODE "+i+" = " + ((JSONObject)rows.get(i)).get("FR_CODE") +" / ";
 			}
+			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
