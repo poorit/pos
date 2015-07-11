@@ -40,17 +40,22 @@ public class SearchController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String searchByStationName(String stationName, Model model){
 		logger.info("The client has requested that we find the station : "+stationName);
+		String originalURL, key, type, service, requestStart, requestEnd;
+		String apiUrl, stationInfo = "";
 		
-		// http://openAPI.seoul.go.kr:8088/62656869393632313630/json/SearchInfoBySubwayNameService/1/5/목동/
-		String originalURL = "http://openAPI.seoul.go.kr:8088", key = "6b6b66475062656836304c6f776657";
-		String type ="json", service = "SearchInfoBySubwayNameService";
-		String requestStart = "1", requestEnd = "5";
-		
-		String apiUrl = originalURL+"/"+key+"/"+type+"/"+service+"/"+requestStart+"/"+requestEnd+"/"+stationName;
-		
-		String stationInfo = parsingJsonDatas(apiUrl);
-		
-		System.out.println("result :::::::: "+stationInfo);
+		if(stationName.equals("default")){
+			stationInfo = "찾고 싶은 역을 검색 해 주세요.";
+		}else{
+			originalURL = "http://openAPI.seoul.go.kr:8088"; key = "6b6b66475062656836304c6f776657";
+			type ="json"; service = "SearchInfoBySubwayNameService";
+			requestStart = "1"; requestEnd = "5";
+			
+			apiUrl = originalURL+"/"+key+"/"+type+"/"+service+"/"+requestStart+"/"+requestEnd+"/"+stationName;
+			
+			stationInfo = parsingJsonDatas(apiUrl);
+			
+			System.out.println("result :::::::: "+stationInfo);
+		}
 		
 		model.addAttribute("stationName", stationName);
 		model.addAttribute("stationInfo", stationInfo);
@@ -60,26 +65,40 @@ public class SearchController {
 	
 	// TODO : for work
 	public String parsingJsonDatas(String requestURL){
-		String result = "";
+		InputStreamReader isr = null;
+		String result = ""; 
+		JSONObject fullData, wrapData = null;
+		JSONArray rows = null;
+		
 		try {
 			URL url = new URL(requestURL);
 			
 			// 한글 처리를 위해 InputStreamReader를 UTF-8 인코딩으로 감싼다.
-			InputStreamReader isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+			isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
 			
 			// JSON을 Parsing 한다. 문법오류가 날 경우 Exception 발생, without Exception -> parse 메소드
-			JSONObject fullData = (JSONObject)JSONValue.parseWithException(isr);
+			fullData = (JSONObject)JSONValue.parseWithException(isr);
 			
-			//전체를 감싸고 있는 SearchInfoBySubwayNameService 안에 있는 정보 가져옴
-			JSONObject wrapData = (JSONObject)(fullData.get("SearchInfoBySubwayNameService")); 
-			
-			// wrap 안에 있는 key 값중 row키의 값을 배열화 시킴.
-			JSONArray rows = (JSONArray)wrapData.get("row");
-			
-			//items 안에 있는 row키값들을 출력
-			for(int i = 0 ; i < rows.size(); i++) {
-				result += "FR_CODE "+i+" = " + ((JSONObject)rows.get(i)).get("FR_CODE") +" / ";
+			try {
+				//전체를 감싸고 있는 SearchInfoBySubwayNameService 안에 있는 정보 가져옴
+				wrapData = (JSONObject)(fullData.get("SearchInfoBySubwayNameService")); 
+				System.out.println(wrapData);
+				// wrap 안에 있는 key 값중 row키의 값을 배열화 시킴.
+				rows = (JSONArray)wrapData.get("row");
+				
+				//items 안에 있는 row키값들을 출력
+				String codes[] = new String[rows.size()];
+				for(int i = 0 ; i < codes.length; i++) {
+//					result += ((JSONObject)rows.get(i)).get("FR_CODE")+"";
+					codes[i] = ((JSONObject)rows.get(i)).get("FR_CODE")+"";
+					result += codes[i]+" / ";
+				}
+			}catch(NullPointerException ne){
+				//전체를 감싸고 있는 RESULT 안에 있는 정보 가져옴
+				wrapData = (JSONObject)(fullData.get("RESULT"));
+				result = wrapData.get("MESSAGE")+"";
 			}
+
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -89,6 +108,8 @@ public class SearchController {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
+		} finally {
+			try { isr.close(); }catch(Exception e){}
 		}
 		
 		return result;
