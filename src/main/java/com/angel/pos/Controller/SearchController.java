@@ -42,7 +42,7 @@ public class SearchController {
 		logger.info("The client has requested that we find the station : "+stationName);
 		
 		// http://openAPI.seoul.go.kr:8088/62656869393632313630/json/SearchInfoBySubwayNameService/1/5/목동/
-		String originalURL = "http://openAPI.seoul.go.kr:8088", key = "62656869393632313630";
+		String originalURL = "http://openAPI.seoul.go.kr:8088", key = "6b6b66475062656836304c6f776657";
 		String type ="json", service = "SearchInfoBySubwayNameService";
 		String requestStart = "1", requestEnd = "5";
 		
@@ -51,8 +51,6 @@ public class SearchController {
 		String stationInfo = parsingJsonDatas(apiUrl);
 		
 		System.out.println("result :::::::: "+stationInfo);
-		
-		parsingJsonDatas(apiUrl);
 		
 		model.addAttribute("stationName", stationName);
 		model.addAttribute("stationInfo", stationInfo);
