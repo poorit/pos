@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import org.json.simple.JSONArray;
@@ -56,9 +57,9 @@ public class SearchController {
 			stationInfo = parsingJsonDatas(apiUrl);
 			
 			System.out.println("result :::::::: "+stationInfo);
-
-			stationName = URLEncoder.encode(stationName,"utf-8");
 		}
+		
+		stationName = URLDecoder.decode(stationName,"utf-8");
 		model.addAttribute("stationName", stationName);
 		model.addAttribute("stationInfo", stationInfo);
 		
