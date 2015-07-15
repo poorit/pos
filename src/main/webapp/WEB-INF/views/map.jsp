@@ -17,11 +17,12 @@
 <%@ include file="login.jsp"%>
 
 <div class="container-fluid" id="main_contents">
-	<div class="form-group" id="map_search">
-			<input type="text" class="form-control" id="map_search_input" placeholder="SEARCH"/>
-	</div>
-		<button type="button" class="btn btn-default" id="map_search_btn" onclick="SearchMap()">검색</button>
-
+	<form onclick="SearchMap()" method="get">
+		<div class="form-group" id="map_search">
+				<input type="text" class="form-control" id="map_search_input" placeholder="SEARCH"/>
+		</div>
+			<button type="submit" class="btn btn-default" id="map_search_btn" onclick="">검색</button>
+	</form>
 	<!-- 지도를 표시할 div 입니다 -->
 	<div id="map" style="width:100%;height:1024px"></div>
 </div>
