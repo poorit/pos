@@ -56,8 +56,9 @@ public class SearchController {
 			stationInfo = parsingJsonDatas(apiUrl);
 			
 			System.out.println("result :::::::: "+stationInfo);
+
+			stationName = URLEncoder.encode(stationName,"utf-8");
 		}
-		stationName = URLEncoder.encode(stationName,"utf-8");
 		model.addAttribute("stationName", stationName);
 		model.addAttribute("stationInfo", stationInfo);
 		
