@@ -1,12 +1,11 @@
 package com.angel.pos.Controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,15 +37,17 @@ public class SearchController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String searchByStationName(String stationName, Model model){
+	public String searchByStationName(String stationName, Model model) throws Exception{
 		logger.info("The client has requested that we find the station : "+stationName);
 		String originalURL, key, type, service, requestStart, requestEnd;
 		String apiUrl, stationInfo = "";
+		stationName.replaceAll(" ", "");
+		stationName = URLEncoder.encode(stationName,"utf-8");
 		
 		if(stationName.equals("default")){
 			stationInfo = "찾고 싶은 역을 검색 해 주세요.";
 		}else{
-			originalURL = "http://openAPI.seoul.go.kr:8088"; key = "6b6b66475062656836304c6f776657";
+			originalURL = "http://openAPI.seoul.go.kr:8088"; key = "7a5a5a6e46706f6f36355172424c51";
 			type ="json"; service = "SearchInfoBySubwayNameService";
 			requestStart = "1"; requestEnd = "5";
 			
@@ -56,7 +57,7 @@ public class SearchController {
 			
 			System.out.println("result :::::::: "+stationInfo);
 		}
-		
+		stationName = URLEncoder.encode(stationName,"utf-8");
 		model.addAttribute("stationName", stationName);
 		model.addAttribute("stationInfo", stationInfo);
 		
