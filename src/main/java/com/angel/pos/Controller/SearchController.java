@@ -42,45 +42,51 @@ public class SearchController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String searchByStationName(String stationName, Model model) throws Exception{
 		logger.info("The client has requested that we find the station : "+stationName);
-		stationName = stationName.replaceAll(" ", "").replace("역", "");
+		stationName = stationName.replaceAll(" ", "");
+		if(stationName.endsWith("역")) stationName = stationName.replaceAll("역", "");
 		stationName = URLEncoder.encode(stationName,"utf-8");
 		
 		String originalURL, key, type, service, requestStart, requestEnd;
-		String apiUrl = "", defaultMsg = "";
+		String apiUrl = "", defaultMsg = "", stationCode = "";
 		List<String> stationInfo = null;
 		
 		if(stationName.equals("default")){
 			defaultMsg = "찾고 싶은 역을 검색 해 주세요.";
 		}else{
 			originalURL = "http://openAPI.seoul.go.kr:8088"; key = "7a5a5a6e46706f6f36355172424c51";
-			type ="json"; 
-			requestStart = "1"; requestEnd = "5";
-			
-			service = "SearchInfoBySubwayNameService";
-			apiUrl = originalURL+"/"+key+"/"+type+"/"+service+"/"+requestStart+"/"+requestEnd+"/"+stationName;
+			type ="json"; requestStart = "1"; requestEnd = "5";
 			
 			try{
-				stationInfo = parsingJsonDatas(apiUrl);
+				service = "SearchInfoBySubwayNameService";
+				apiUrl = originalURL+"/"+key+"/"+type+"/"+service+"/"+requestStart+"/"+requestEnd+"/"+stationName;
+				// 역 코드 반환
+				stationCode = getStationCodesBySubwayName(apiUrl, stationName);
+				
+				service = "SearchFacilityByIDService"; requestEnd = "1000";
+				apiUrl = originalURL+"/"+key+"/"+type+"/"+service+"/"+requestStart+"/"+requestEnd+"/"+stationCode;
+				// 역 정보 반환
+				stationInfo = getStationInfoByStationCode(apiUrl); 
 			}catch(NullPointerException e){
-				defaultMsg = "역 정보를 찾을 수 없습니다.";
+				if(stationCode==null) defaultMsg = "역 정보를 찾을 수 없습니다.";
+				else defaultMsg = "역 주변정보가 없습니다.";
 			}
 		}
 		
 		stationName = URLDecoder.decode(stationName,"utf-8");
 		model.addAttribute("stationName", stationName);
 		
-		if(stationInfo==null) model.addAttribute("stationInfo", defaultMsg);
+		if(stationCode.equals("") || stationInfo==null) model.addAttribute("stationInfo", defaultMsg);
 		else model.addAttribute("stationInfo", stationInfo);
 		
 		return "searchStation";
 	}
 	
 	// TODO : for work
-	public List<String> parsingJsonDatas(String requestURL) throws NullPointerException{
+	public String getStationCodesBySubwayName(String requestURL, String stationName) throws NullPointerException{
 		InputStreamReader isr = null;
-		List<String> result = new ArrayList<String>(); 
 		JSONObject fullData, wrapData = null;
 		JSONArray rows = null;
+		String stationCode = "";
 		
 		try {
 			URL url = new URL(requestURL);
@@ -93,15 +99,17 @@ public class SearchController {
 			
 			//전체를 감싸고 있는 SearchInfoBySubwayNameService 안에 있는 정보 가져옴
 			wrapData = (JSONObject)(fullData.get("SearchInfoBySubwayNameService")); 
-			System.out.println(wrapData);
 			// wrap 안에 있는 key 값중 row키의 값을 배열화 시킴.
 			rows = (JSONArray)wrapData.get("row");
 			
-			//items 안에 있는 row키값들을 출력
-			for(int i = 0 ; i < rows.size(); i++) {
-				result.add(i,((JSONObject)rows.get(i)).get("FR_CODE")+"");
+			//items 안에 있는 row키값
+			stationName = URLDecoder.decode(stationName,"utf-8");
+			if(stationName.equals("까치산") || stationName.equals("신도림")){
+				stationCode = ((JSONObject)rows.get(1)).get("STATION_CD")+"";
+				System.out.println("station code ::::::::::::: "+stationCode);
+			}else{
+				stationCode = ((JSONObject)rows.get(0)).get("STATION_CD")+"";
 			}
-
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -115,7 +123,40 @@ public class SearchController {
 			try { isr.close(); }catch(Exception e){}
 		}
 		
-		return result;
+		return stationCode;
+	}
+	
+	public List<String> getStationInfoByStationCode(String requestURL) throws NullPointerException{
+		InputStreamReader isr = null;
+		JSONObject fullData, wrapData = null;
+		JSONArray rows = null;
+		List<String> stationInfo = new ArrayList<String>();
+		
+		try {
+			URL url = new URL(requestURL);
+			isr = new InputStreamReader(url.openConnection().getInputStream(), "UTF-8");
+			
+			fullData = (JSONObject)JSONValue.parseWithException(isr);
+			wrapData = (JSONObject)(fullData.get("SearchFacilityByIDService")); 
+			rows = (JSONArray)wrapData.get("row");
+			
+			for(int i = 0 ; i < rows.size(); i++) {
+				stationInfo.add(i,((JSONObject)rows.get(i)).get("AREA_NM")+"");
+			}
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} finally {
+			try { isr.close(); }catch(Exception e){}
+		}
+		
+		return stationInfo;
 	}
 	
 }
