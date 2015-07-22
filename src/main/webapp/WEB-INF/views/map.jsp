@@ -17,12 +17,20 @@
 <%@ include file="login.jsp"%>
 
 <div class="container-fluid" id="main_contents">
-	<form onclick="SearchMap()" method="get">
-		<div class="form-group" id="map_search">
-				<input type="text" class="form-control" id="map_search_input" placeholder="SEARCH"/>
-		</div>
-			<button type="submit" class="btn btn-default" id="map_search_btn" onclick="">검색</button>
-	</form>
+	<div class="form-group" id="map_search_one">
+			<input type="text" class="form-control" id="map_search_input_one" placeholder="SEARCH"/>
+			<button type="button" class="btn btn-default" id="map_search_one_btn" onclick="SearchMap('one')">검색</button>
+	</div>
+	<div class="form-group" id="map_search_two">
+			<input type="text" class="form-control" id="map_search_input_two" placeholder="SEARCH"/>
+			<button type="button" class="btn btn-default" id="map_search_two_btn" onclick="SearchMap('two')">검색</button>
+	</div>
+	<div class="form-group" id="map_search_three">
+			<input type="text" class="form-control" id="map_search_input_three" placeholder="SEARCH"/>
+			<button type="button" class="btn btn-default" id="map_search_three_btn" onclick="SearchMap('three')">검색</button>
+	</div>
+		<button type="button" class="btn btn-default" id="map_search_btn" onclick="SearchMap('result')">검색</button>
+
 	<!-- 지도를 표시할 div 입니다 -->
 	<div id="map" style="width:100%;height:1024px"></div>
 </div>
@@ -30,6 +38,10 @@
 <script>
 // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 var infowindow = new daum.maps.InfoWindow({zIndex:1});
+var map_one = {x : 0 , y : 0};
+var map_two = {x : 0 , y : 0};
+var map_three = {x : 0 , y : 0};
+var map_result = {x : 0 , y : 0};
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
@@ -61,6 +73,7 @@ function placesSearchCB (status, data, pagination) {
 
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
+        
     } 
 }
 
@@ -80,9 +93,43 @@ function displayMarker(place) {
         infowindow.open(map, marker);
     });
 }
-function SearchMap(){
-	var data = document.getElementById('map_search_input').value;
-	ps.keywordSearch(data, placesSearchCB);
+function SearchMap(value){
+	
+	if(value != "result")
+	{
+		var data = document.getElementById('map_search_input_'+value).value;
+		ps.keywordSearch(data, placesSearchCB);
+	}else{
+		alert(map_three.x);
+		map_result.x = (map_one.x + map_two.x + map_three.x) / 3;
+		map_result.y = (map_one.y + map_two.y + map_three.y) / 3;
+		
+		alert("result : " + map_result.x + ", " + map_result.y);
+		
+		mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = {
+	        center: new daum.maps.LatLng(map_result.x.toFixed(6), map_result.y.toFixed(6)), // 지도의 중심좌표
+	        level: 3 // 지도의 확대 레벨
+	    }; 
+		
+		map = new daum.maps.Map(mapContainer, mapOption); 
+	}
+	
+	
+	if(value == "one")
+	{
+		map_one.x = map.getCenter().getLat();
+		map_one.y = map.getCenter().getLng();
+		alert("one : " + map_one.x + ", " + map_one.y);
+	}else if(value == "two"){
+		map_two.x = map.getCenter().getLat();
+		map_two.y = map.getCenter().getLng();
+		alert("two : " + map_two.x + ", " + map_two.y);
+	}else if(value == "three"){
+		map_three.x = map.getCenter().getLat();
+		map_three.y = map.getCenter().getLng();
+		alert("three : " + map_three.x + ", " + map_three.y);
+	}
 }
 </script>
 </body>
