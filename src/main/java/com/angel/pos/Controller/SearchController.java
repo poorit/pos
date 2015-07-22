@@ -41,7 +41,7 @@ public class SearchController {
 	 */
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String searchByStationName(String stationName, Model model) throws Exception{
-		logger.info("The client has requested that we find the station : "+stationName);
+		logger.info("The client has requested that find the station : "+stationName);
 		
 		// stationName 변환
 		if(stationName.equals("")) stationName = "default";
