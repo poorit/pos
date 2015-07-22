@@ -29,7 +29,7 @@
 			
 			<!-- 역정보 -->
 			<div id="station_info">
-				찾는 역 이름 : ${stationName} <br>
+				찾는 역 이름 : <c:if test="${stationName!='default'}">${stationName}</c:if> <br>
 				찾는 역 정보 : 
 				
 				<table>
