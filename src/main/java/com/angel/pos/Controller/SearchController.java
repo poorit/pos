@@ -42,8 +42,11 @@ public class SearchController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String searchByStationName(String stationName, Model model) throws Exception{
 		logger.info("The client has requested that we find the station : "+stationName);
-		stationName = stationName.replaceAll(" ", "");
+		
+		// stationName 변환
+		if(stationName.equals("")) stationName = "default";
 		if(stationName.endsWith("역")) stationName = stationName.replaceAll("역", "");
+		stationName = stationName.replaceAll(" ", "");
 		stationName = URLEncoder.encode(stationName,"utf-8");
 		
 		String originalURL, key, type, service, requestStart, requestEnd;
@@ -106,7 +109,6 @@ public class SearchController {
 			stationName = URLDecoder.decode(stationName,"utf-8");
 			if(stationName.equals("까치산") || stationName.equals("신도림")){
 				stationCode = ((JSONObject)rows.get(1)).get("STATION_CD")+"";
-				System.out.println("station code ::::::::::::: "+stationCode);
 			}else{
 				stationCode = ((JSONObject)rows.get(0)).get("STATION_CD")+"";
 			}
