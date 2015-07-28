@@ -30,9 +30,10 @@ public class MapController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/map", method = RequestMethod.GET)
-	public String map(Locale locale, Model model) {
+	public String map(Locale locale, String city, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
+		System.out.println("city : " + city);
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		

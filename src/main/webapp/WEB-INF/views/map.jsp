@@ -12,27 +12,51 @@
 <script src="<%=request.getContextPath() %>/resources/lib/bootstrap-3.3.2/js/bootstrap.js"></script>
 <script src="<%=request.getContextPath() %>/resources/js/index.js"></script>
 </head>
+<style>
+ .map_wrap {position:relative;width:100%;height:600px;}
+ #centerAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background: rgba(255,255,255,0.8);z-index: 1;padding:5px;font-weight: bold;font-size:14px;}
+</style>
 <body class="index">
 <%@ include file="navbar.jsp"%>
 <%@ include file="login.jsp"%>
 
 <div class="container-fluid" id="main_contents">
-	<div class="form-group" id="map_search_one">
-			<input type="text" class="form-control" id="map_search_input_one" placeholder="SEARCH"/>
-			<button type="button" class="btn btn-default" id="map_search_one_btn" onclick="SearchMap('one')">검색</button>
-	</div>
-	<div class="form-group" id="map_search_two">
-			<input type="text" class="form-control" id="map_search_input_two" placeholder="SEARCH"/>
-			<button type="button" class="btn btn-default" id="map_search_two_btn" onclick="SearchMap('two')">검색</button>
-	</div>
-	<div class="form-group" id="map_search_three">
-			<input type="text" class="form-control" id="map_search_input_three" placeholder="SEARCH"/>
-			<button type="button" class="btn btn-default" id="map_search_three_btn" onclick="SearchMap('three')">검색</button>
-	</div>
-		<button type="button" class="btn btn-default" id="map_search_btn" onclick="SearchMap('result')">검색</button>
-
+	   <div class="form-group has-success" id="map_search_one">
+      <input type="text" class="form-control" id="map_search_input_one" placeholder="SEARCH"/>
+        
+      <button type="button" onclick="SearchMap('one')" 
+            id="map_search_btn" class="btn btn-default">
+         <span class="glyphicon glyphicon-ok"></span>
+      </button>
+   </div>
+   
+   <div class="form-group has-success" id="map_search_two">
+      <input type="text" class="form-control" id="map_search_input_two" placeholder="SEARCH"/>
+        
+      <button type="button" onclick="SearchMap('two')" 
+            id="map_search_btn" class="btn btn-default">
+         <span class="glyphicon glyphicon-ok"></span>
+      </button>
+   </div>
+   
+   <div class="form-group has-success" id="map_search_three">
+      <input type="text" class="form-control" id="map_search_input_three" placeholder="SEARCH"/>
+        
+      <button type="button" onclick="SearchMap('three')" 
+            id="map_search_btn" class="btn btn-default">
+         <span class="glyphicon glyphicon-ok"></span>
+      </button>
+   </div>
+      
+   <form action = "map" method="get" id="mapForm">
+      <input type="text" id="city" name="city" value="" style="display:none">
+      <button type="button" class="btn btn-default" id="map_search_result_btn" onclick="SearchMap('result')">검색</button>
+   </form>
 	<!-- 지도를 표시할 div 입니다 -->
-	<div id="map" style="width:100%;height:1024px"></div>
+	<div class="map_wrap">
+    	<div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    	<div id="centerAddr"></div>
+	</div>
 </div>
 <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=b2e0efeb7f0e5d5853cb1778210d6854&libraries=services"></script>
 <script>
@@ -52,11 +76,20 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
 // 지도를 생성합니다    
 var map = new daum.maps.Map(mapContainer, mapOption); 
 
+//주소-좌표 변환 객체를 생성합니다
+var geocoder = new daum.maps.services.Geocoder();
+
+//현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
 // 장소 검색 객체를 생성합니다
 var ps = new daum.maps.services.Places(); 
 
 // 키워드로 장소를 검색합니다
 ps.keywordSearch('용산 맛집', placesSearchCB); 
+
+//현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+searchAddrFromCoords(map.getCenter(), displayCenterInfo);
 
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function placesSearchCB (status, data, pagination) {
@@ -93,6 +126,7 @@ function displayMarker(place) {
         infowindow.open(map, marker);
     });
 }
+
 function SearchMap(value){
 	
 	if(value != "result")
@@ -113,6 +147,15 @@ function SearchMap(value){
 	    }; 
 		
 		map = new daum.maps.Map(mapContainer, mapOption); 
+		searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+		
+		var infoDiv = document.getElementById('centerAddr');
+		var city = document.getElementById('city');
+		var form = document.forms["mapForm"];
+		
+		city.value = infoDiv.value;
+		form.submit();
+		
 	}
 	
 	
@@ -120,16 +163,31 @@ function SearchMap(value){
 	{
 		map_one.x = map.getCenter().getLat();
 		map_one.y = map.getCenter().getLng();
-		alert("one : " + map_one.x + ", " + map_one.y);
 	}else if(value == "two"){
 		map_two.x = map.getCenter().getLat();
 		map_two.y = map.getCenter().getLng();
-		alert("two : " + map_two.x + ", " + map_two.y);
 	}else if(value == "three"){
 		map_three.x = map.getCenter().getLat();
 		map_three.y = map.getCenter().getLng();
-		alert("three : " + map_three.x + ", " + map_three.y);
 	}
+}
+//중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+daum.maps.event.addListener(map, 'idle', function() {
+    searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+});
+
+function searchAddrFromCoords(coords, callback) {
+    // 좌표로 주소 정보를 요청합니다
+    geocoder.coord2addr(coords, callback);         
+}
+
+// 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+function displayCenterInfo(status, result) {
+    if (status === daum.maps.services.Status.OK) {
+        var infoDiv = document.getElementById('centerAddr');
+        infoDiv.innerHTML = result[0].fullName;
+        infoDiv.value = result[0].fullName;
+    }    
 }
 </script>
 </body>

@@ -162,7 +162,7 @@
 		font-size:24px;
 		border-radius:0px;
 	}
-	#home_search_btn , #map_search_btn, #station_search_btn{
+	#home_search_btn , #map_search_result_btn, #station_search_btn{
 		width:100px;
 		height:52px;
 		margin-bottom:10px;
