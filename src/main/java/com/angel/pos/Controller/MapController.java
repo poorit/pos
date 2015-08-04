@@ -39,7 +39,8 @@ public class MapController {
 		
 		String formattedDate = dateFormat.format(date);
 		
-		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("serverTime", formattedDate);
+		
 		return "map";
 	}
 }

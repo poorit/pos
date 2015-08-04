@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,8 +22,9 @@
 <%@ include file="login.jsp"%>
 
 <div class="container-fluid" id="main_contents">
-	   <div class="form-group has-success" id="map_search_one">
-      <input type="text" class="form-control" id="map_search_input_one" placeholder="SEARCH"/>
+  <form action = "map" method="get" id="mapForm">
+	<div class="form-group has-success" id="map_search_one">
+      <input type="text" class="form-control" name="one" id="map_search_input_one" placeholder="SEARCH"/>
         
       <button type="button" onclick="SearchMap('one')" 
             id="map_search_btn" class="btn btn-default">
@@ -31,7 +33,7 @@
    </div>
    
    <div class="form-group has-success" id="map_search_two">
-      <input type="text" class="form-control" id="map_search_input_two" placeholder="SEARCH"/>
+      <input type="text" class="form-control" name="two" id="map_search_input_two" placeholder="SEARCH"/>
         
       <button type="button" onclick="SearchMap('two')" 
             id="map_search_btn" class="btn btn-default">
@@ -40,16 +42,14 @@
    </div>
    
    <div class="form-group has-success" id="map_search_three">
-      <input type="text" class="form-control" id="map_search_input_three" placeholder="SEARCH"/>
+      <input type="text" class="form-control" name="three" id="map_search_input_three" placeholder="SEARCH"/>
         
       <button type="button" onclick="SearchMap('three')" 
             id="map_search_btn" class="btn btn-default">
          <span class="glyphicon glyphicon-ok"></span>
       </button>
    </div>
-      
-   <form action = "map" method="get" id="mapForm">
-      <input type="text" id="city" name="city" value="" style="display:none">
+   <input type="text" id="result" name="result" value="" style="display:none">
       <button type="button" class="btn btn-default" id="map_search_result_btn" onclick="SearchMap('result')">검색</button>
    </form>
 	<!-- 지도를 표시할 div 입니다 -->
@@ -155,7 +155,6 @@ function SearchMap(value){
 		
 		city.value = infoDiv.value;
 		form.submit();
-		
 	}
 	
 	
