@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- -->
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.angel.pos.Dao.RankDao">
+	
+	<select id="select" parameterType="String" resultType="Rank">
+		select * from rank where city=#{city};
+	</select> 
+	
+	<insert id="insert" parameterType="Rank">
+		insert
+		into
+		rank(city,hit)
+		values(#{city},#{hit})
+	</insert>
+	<update id="update" parameterType="int">
+		update rank
+		set hit = hit + 1
+		where no = #{no}
+	</update>
+<!--
+	<select id="login" parameterType="String" resultType="String">
+		select
+		user_password
+		from user
+		where user_email=#{user_email}
+	</select>
+
+	<select id="loginInfo" parameterType="map" resultType="User">
+		select *
+		from user
+		where user_email = #{user_email} and user_password = #{user_password}
+	</select>
+
+	<delete id="delete" parameterType="int">
+		delete
+		from user
+		where user_no=#{user_no}
+	</delete>
+
+ -->
+
+</mapper>

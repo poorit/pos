@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.angel.pos.Dao.RankDao;
+
 /**
  * Handles requests for the application home page.
  */
@@ -20,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class MapController {		
 	private static final Logger logger = LoggerFactory.getLogger(MapController.class);
 	
+	@Autowired
+	@Qualifier("rankDao")
+	private RankDao rankDao;
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -38,7 +43,18 @@ public class MapController {
 		model.addAttribute("serverTime", formattedDate);
 		model.addAttribute("map_result_x",map_result_x);
 		model.addAttribute("map_result_y",map_result_y);
-
+		
+		int past_no = 0;
+		
+		if(map_result_x != null && map_result_y != null){
+			
+			if(rankDao.select(city) != null){
+				past_no = rankDao.select(city).getNo();
+				rankDao.update(past_no);
+			}else {
+				rankDao.insert(city);
+			}
+		}
 		return "map";
 	}
 }

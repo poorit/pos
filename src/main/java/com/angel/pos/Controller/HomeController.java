@@ -42,7 +42,7 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		//System.out.println("getM_id() :" + membersDao.select(1).getM_id());
+		System.out.println("getM_id() :" + membersDao.select(1).getM_id());
 		return "home";
 	}
 }
