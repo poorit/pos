@@ -49,8 +49,10 @@
          <span class="glyphicon glyphicon-ok"></span>
       </button>
    </div>
-   <input type="text" id="result" name="result" value="" style="display:none">
-      <button type="button" class="btn btn-default" id="map_search_result_btn" onclick="SearchMap('result')">검색</button>
+   <input type="text" id="city" name="city" value="" style="display:none">
+   <input type="text" id="map_result_x" name="map_result_x" value="${map_result_x}" style="display:">
+   <input type="text" id="map_result_y" name="map_result_y" value="${map_result_y}" style="display:">
+   <button type="button" class="btn btn-default" id="map_search_result_btn" onclick="SearchMap('result')">검색</button>
    </form>
 	<!-- 지도를 표시할 div 입니다 -->
 	<div class="map_wrap">
@@ -62,14 +64,31 @@
 <script>
 // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 var infowindow = new daum.maps.InfoWindow({zIndex:1});
+
 var map_one = {x : 0 , y : 0};
 var map_two = {x : 0 , y : 0};
 var map_three = {x : 0 , y : 0};
 var map_result = {x : 0 , y : 0};
 
+var x=37.566826;
+var y=126.9786567;
+
+var value = "";
+
+var first_flag = true;
+var test_flag = true;
+
+if(document.getElementById('map_result_x').value != "")
+{
+	x=document.getElementById('map_result_x').value;
+	y=document.getElementById('map_result_y').value;
+	first_flag=false;
+} 
+	
+	
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
-        center: new daum.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+        center: new daum.maps.LatLng(x, y), // 지도의 중심좌표
         level: 3 // 지도의 확대 레벨
     };  
 
@@ -86,8 +105,10 @@ searchAddrFromCoords(map.getCenter(), displayCenterInfo);
 var ps = new daum.maps.services.Places(); 
 
 // 키워드로 장소를 검색합니다
-ps.keywordSearch('용산 맛집', placesSearchCB); 
-
+if(first_flag){
+	//ps.keywordSearch('용산 맛집', placesSearchCB);
+}
+ 
 //현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
 searchAddrFromCoords(map.getCenter(), displayCenterInfo);
 
@@ -107,6 +128,16 @@ function placesSearchCB (status, data, pagination) {
         // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         map.setBounds(bounds);
         
+        if(value == "one"){
+        	map_one.x = map.getCenter().getLat();
+    		map_one.y = map.getCenter().getLng();
+        }else if(value == "two"){
+        	map_two.x = map.getCenter().getLat();
+    		map_two.y = map.getCenter().getLng();
+        }else if(value == "three"){
+        	map_three.x = map.getCenter().getLat();
+    		map_three.y = map.getCenter().getLng();
+        }
     } 
 }
 
@@ -127,18 +158,19 @@ function displayMarker(place) {
     });
 }
 
-function SearchMap(value){
+function SearchMap(tmp){
 	
-	if(value != "result")
+	if(tmp != "result")
 	{
-		var data = document.getElementById('map_search_input_'+value).value;
+		var data = document.getElementById('map_search_input_'+tmp).value;
 		ps.keywordSearch(data, placesSearchCB);
+		
+		value = tmp;
 	}else{
-		alert(map_three.x);
 		map_result.x = (map_one.x + map_two.x + map_three.x) / 3;
 		map_result.y = (map_one.y + map_two.y + map_three.y) / 3;
 		
-		alert("result : " + map_result.x + ", " + map_result.y);
+		alert("x : " + map_result.x + "y : " + map_result.y);
 		
 		mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	    mapOption = {
@@ -154,21 +186,31 @@ function SearchMap(value){
 		var form = document.forms["mapForm"];
 		
 		city.value = infoDiv.value;
+		document.getElementById('map_result_x').value = map_result.x.toFixed(6);
+		document.getElementById('map_result_y').value = map_result.y.toFixed(6);
+
 		form.submit();
 	}
 	
 	
-	if(value == "one")
+/* 	if(value == "one" && test_flag == false)
 	{
 		map_one.x = map.getCenter().getLat();
 		map_one.y = map.getCenter().getLng();
+		
+		alert("one x : " + map_one.x + " y : " + map_one.y);
+		
 	}else if(value == "two"){
 		map_two.x = map.getCenter().getLat();
 		map_two.y = map.getCenter().getLng();
+		
+		alert("two x : " + map_two.x + " y : " + map_two.y);
 	}else if(value == "three"){
 		map_three.x = map.getCenter().getLat();
 		map_three.y = map.getCenter().getLng();
-	}
+		
+		alert("three x : " + map_three.x + " y : " + map_three.y);
+	} */
 }
 //중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
 daum.maps.event.addListener(map, 'idle', function() {
