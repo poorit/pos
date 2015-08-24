@@ -39,9 +39,10 @@
 			</div>
 			<div id="rank">
 				<h4 id="title">RANK</h4>
+				<h5>도시		검색 횟수</h5>
 				<hr>
 				<c:forEach var="dataList" items="${rankList}">	
-					<h5>${dataList}</h5></br>
+					<h5>${dataList.city}		${dataList.hit}</h5>
 				</c:forEach>
 			</div>
 		</div>

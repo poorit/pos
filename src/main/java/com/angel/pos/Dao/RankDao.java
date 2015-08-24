@@ -1,6 +1,5 @@
 package com.angel.pos.Dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -15,7 +14,7 @@ public class RankDao {
 	@Autowired
 	SqlSessionFactory sqlSessionFactory;
 	
-	public List rankList(){
+	public List<Rank> rankList(){
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		
 		try {
@@ -27,6 +26,7 @@ public class RankDao {
 		}
 		return null;
 	}
+	
 	public Rank select(String city){
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		
