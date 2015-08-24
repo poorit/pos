@@ -2,6 +2,7 @@ package com.angel.pos.Controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -13,7 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.angel.pos.Dao.MembersDao;
+import com.angel.pos.Dao.RankDao;
+import com.angel.pos.Domain.Rank;
 
 /**
  * Handles requests for the application home page.
@@ -21,8 +23,8 @@ import com.angel.pos.Dao.MembersDao;
 @Controller("HomeController")
 public class HomeController {
 	@Autowired
-	@Qualifier("membersDao")
-	private MembersDao membersDao;
+	@Qualifier("rankDao")
+	private RankDao rankDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -33,7 +35,7 @@ public class HomeController {
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		
+		List<String> list = null;
 		
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
@@ -41,8 +43,16 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 		
 		model.addAttribute("serverTime", formattedDate );
+
 		
-		System.out.println("getM_id() :" + membersDao.select(1).getM_id());
+		list = rankDao.rankList();
+		model.addAttribute("rankList",list);
+		
+/*		System.out.println(list.get(0));
+		System.out.println(list.get(1));*/
+		
+		
+		
 		return "home";
 	}
 }

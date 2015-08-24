@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +40,9 @@
 			<div id="rank">
 				<h4 id="title">RANK</h4>
 				<hr>
-				<h5>안녕하세요 랭크입니다.</h5>
+				<c:forEach var="dataList" items="${rankList}">	
+					<h5>${dataList}</h5></br>
+				</c:forEach>
 			</div>
 		</div>
 	</div>

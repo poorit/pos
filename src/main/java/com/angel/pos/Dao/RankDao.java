@@ -1,5 +1,8 @@
 package com.angel.pos.Dao;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,18 @@ public class RankDao {
 	@Autowired
 	SqlSessionFactory sqlSessionFactory;
 	
+	public List rankList(){
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		
+		try {
+			return sqlSession.selectList("com.angel.pos.Dao.RankDao.rankList");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+		return null;
+	}
 	public Rank select(String city){
 		SqlSession sqlSession = sqlSessionFactory.openSession();
 		

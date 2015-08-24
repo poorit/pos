@@ -4,7 +4,9 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.angel.pos.Dao.RankDao">
-	
+	<select id="rankList" resultType="HashMap">
+		select city from rank;
+	</select>
 	<select id="select" parameterType="String" resultType="Rank">
 		select * from rank where city=#{city};
 	</select> 
