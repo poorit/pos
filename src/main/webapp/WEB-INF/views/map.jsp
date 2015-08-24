@@ -22,43 +22,50 @@
 <%@ include file="login.jsp"%>
 
 <div class="container-fluid" id="main_contents">
+
   <form action = "map" method="get" id="mapForm">
-	<div class="form-group has-success" id="map_search_one">
+  
+	<div class="form-group" id="map_search_one">
       <input type="text" class="form-control" name="one" id="map_search_input_one" placeholder="SEARCH"/>
-        
-      <button type="button" onclick="SearchMap('one')" 
-            id="map_search_btn" class="btn btn-default">
+      <input type="hidden" id="check_one" value=""/>
+      
+      <button type="button" onclick="SearchMap('one')" id="map_search_btn" class="btn btn-default">
          <span class="glyphicon glyphicon-ok"></span>
       </button>
    </div>
    
-   <div class="form-group has-success" id="map_search_two">
+   <div class="form-group" id="map_search_two">
       <input type="text" class="form-control" name="two" id="map_search_input_two" placeholder="SEARCH"/>
-        
-      <button type="button" onclick="SearchMap('two')" 
-            id="map_search_btn" class="btn btn-default">
+      <input type="hidden" id="check_two" value=""/>
+      
+      <button type="button" onclick="SearchMap('two')" id="map_search_btn" class="btn btn-default">
          <span class="glyphicon glyphicon-ok"></span>
       </button>
    </div>
    
-   <div class="form-group has-success" id="map_search_three">
+   <div class="form-group" id="map_search_three">
       <input type="text" class="form-control" name="three" id="map_search_input_three" placeholder="SEARCH"/>
-        
-      <button type="button" onclick="SearchMap('three')" 
-            id="map_search_btn" class="btn btn-default">
+      <input type="hidden" id="check_three" value=""/>
+      
+      <button type="button" onclick="SearchMap('three')" id="map_search_btn" class="btn btn-default">
          <span class="glyphicon glyphicon-ok"></span>
       </button>
    </div>
-   <input type="text" id="city" name="city" value="" style="display:none">
-   <input type="text" id="map_result_x" name="map_result_x" value="${map_result_x}" style="display:">
-   <input type="text" id="map_result_y" name="map_result_y" value="${map_result_y}" style="display:">
+
    <button type="button" class="btn btn-default" id="map_search_result_btn" onclick="SearchMap('result')">검색</button>
-   </form>
-	<!-- 지도를 표시할 div 입니다 -->
-	<div class="map_wrap">
-    	<div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-    	<div id="centerAddr"></div>
-	</div>
+   
+   <!-- 내용 저장  Inputs -->
+   <input type="hidden" id="city" name="city" value="">
+   <input type="hidden" id="map_result_x" name="map_result_x" value="${map_result_x}">
+   <input type="hidden" id="map_result_y" name="map_result_y" value="${map_result_y}">
+  </form>
+  
+  <!-- 지도를 표시할 div 입니다 -->
+  <div class="map_wrap">
+  	<div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+	<div id="centerAddr"></div>
+  </div>
+  
 </div>
 <script type="text/javascript" src="//apis.daum.net/maps/maps3.js?apikey=b2e0efeb7f0e5d5853cb1778210d6854&libraries=services"></script>
 <script>
@@ -162,34 +169,60 @@ function SearchMap(tmp){
 	
 	if(tmp != "result")
 	{
+		var dataDiv = document.getElementById('map_search_'+tmp);
 		var data = document.getElementById('map_search_input_'+tmp).value;
-		ps.keywordSearch(data, placesSearchCB);
+		var check = document.getElementById('check_'+tmp);
 		
+		if(data.length!=0) check.value = "check";
+		dataDiv.className = "form-group has-success";
+
+		ps.keywordSearch(data, placesSearchCB);
 		value = tmp;
 	}else{
-		map_result.x = (map_one.x + map_two.x + map_three.x) / 3;
-		map_result.y = (map_one.y + map_two.y + map_three.y) / 3;
+		var check_one = document.getElementById('check_one').value;
+		var check_two = document.getElementById('check_two').value;
+		var check_three = document.getElementById('check_three').value;
 		
-		alert("x : " + map_result.x + "y : " + map_result.y);
-		
-		mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-	    mapOption = {
-	        center: new daum.maps.LatLng(map_result.x.toFixed(6), map_result.y.toFixed(6)), // 지도의 중심좌표
-	        level: 3 // 지도의 확대 레벨
-	    }; 
-		
-		map = new daum.maps.Map(mapContainer, mapOption); 
-		searchAddrFromCoords(map.getCenter(), displayCenterInfo);
-		
-		var infoDiv = document.getElementById('centerAddr');
-		var city = document.getElementById('city');
-		var form = document.forms["mapForm"];
-		
-		city.value = infoDiv.value;
-		document.getElementById('map_result_x').value = map_result.x.toFixed(6);
-		document.getElementById('map_result_y').value = map_result.y.toFixed(6);
-
-		form.submit();
+		if(check_one!="" && check_two!="" && check_three!=""){
+			map_result.x = (map_one.x + map_two.x + map_three.x) / 3;
+			map_result.y = (map_one.y + map_two.y + map_three.y) / 3;
+			
+			alert("x : " + map_result.x + "y : " + map_result.y);
+			
+			mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+		    mapOption = {
+		        center: new daum.maps.LatLng(map_result.x.toFixed(6), map_result.y.toFixed(6)), // 지도의 중심좌표
+		        level: 3 // 지도의 확대 레벨
+		    }; 
+			
+			map = new daum.maps.Map(mapContainer, mapOption); 
+			searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+			
+			var infoDiv = document.getElementById('centerAddr');
+			var city = document.getElementById('city');
+			var form = document.forms["mapForm"];
+			
+			city.value = infoDiv.value;
+			document.getElementById('map_result_x').value = map_result.x.toFixed(6);
+			document.getElementById('map_result_y').value = map_result.y.toFixed(6);
+	
+			form.submit();
+		}else{
+			alert("값을 모두 입력 해 주세요.");
+			
+			if(check_one==""){
+				var dataDiv = document.getElementById('map_search_one');
+				dataDiv.className = "form-group has-error";
+			}
+			if(check_two==""){
+				var dataDiv = document.getElementById('map_search_two');
+				dataDiv.className = "form-group has-error";
+			}
+			if(check_three==""){
+				var dataDiv = document.getElementById('map_search_three');
+				dataDiv.className = "form-group has-error";
+			}
+		}
 	}
 	
 	
